@@ -172,7 +172,7 @@ def update_status(request):
         data = json.loads(request.body.decode("UTF-8"))
         id = request.session['user_id']
         try:
-            Productss.objects.filter(customers_id=id,products_name=data['products_name']).update(is_active=data['is_active'])
+            Productss.objects.filter(products_name=data['products_name']).update(is_active=data['is_active'])
             return JsonResponse({"msg": "successfully changed status", "status":200})
         except Exception as e:
             return JsonResponse({"msg": "updation failed", "status":500})
