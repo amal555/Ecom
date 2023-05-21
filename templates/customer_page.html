@@ -1,0 +1,407 @@
+
+
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        {% include 'base_style.html' %}
+    </head>
+    <body style="background-image: url('{% static "images/bg-01.jpg" %}');">
+        {% csrf_token %}
+        {% include 'nav.html' %}
+          <div class="modal fade" id="Unarchived_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row" style="padding: inherit;">
+                            <div class="col-12">
+                                <p class="font_15 mb-2" style="font-size:27px">Change the status?</p>
+                            </div>
+                            <div class="form-check">
+                               
+                                <label class="form-check-label" style="font-size:20px" for="gridCheck">
+                                    Product Active 
+                                </label>
+                                <input class="form-check-input ml-lg-4" style="width: 82px;" type="checkbox" id="gridCheck">
+                              </div>
+                            <div class="col-12 mt-3 text-end">
+                                <button class="btn px_btn btn-master-line py-1 close_model" style=" background: aliceblue;" data-bs-dismiss="modal" aria-label="Close">NO</button>
+                                <button  style=" background: aliceblue;" class="btn px_btn btn-master ms-2 py-1 status_change_yes" >YES</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+          <div class="mt-3" style="background: white;">
+            <div class="table_type01">
+                <div class ="overflow-x-auto">
+                    <table id="customer_table" class="table table-bordered pb-2" width="100%">
+                        <thead>
+                            <tr role="row">
+                                <th class="wd-5p">No.</th>
+                                <th>Customer Name</th>
+                                <th>Address</th>
+                                <th>mobile number</th>
+                                <th>Edit/Delete</th>
+                                <th>Add Product</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="user_edit_modal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header bd_gray py-2">
+                        <h5 class="modal-title lh-1 fw-bold py-2">Update Customer Details</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="">
+                            <form id="edit_user" class="row g-3 needs-validation edit_user_js" novalidate>
+                                <div class="col-md-4">
+                                    <label>Customer Name :<span class="text-danger ps-1">*</span></label>
+                                    <input type="text" class="form-control " name="name_edit" id="name_edit"  placeholder="Enter Firstname" required />
+                                    <div class="invalid-feedback">
+                                        Please provide a First Name.
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Address<span class="text-danger ps-1">*</span></label>
+                                    <input type="text" class="form-control " name="address" id="address_edit"  placeholder="Enter Lastname" required />
+                                    <div class="invalid-feedback">
+                                        Please provide a Address.
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label>Mobile Number :<span class="text-danger ps-1">*</span></label>
+                                    <input type="text" class="form-control " required name="mobilenumber_edit" id="mobilenumber_edit" placeholder="Enter Username" />
+                                    <div class="invalid-feedback">
+                                        Please provide a mobile Number.
+                                    </div>
+                                </div>
+                                <div class="col-12 text-end">
+                                    <button class="btn px_btn btn-master-line py-1 btn btn-primary" data-bs-dismiss="modal" aria-label="Close">Close</button>
+                                    <button type="button" class="btn px_btn btn-master ms-2 py-1 click_user_js user_txt_js btn btn-success" onclick="update_user()">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+        <div class="modal fade" id="add_product" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header bd_gray py-2">
+                        <h5 class="modal-title lh-1 fw-bold py-2">Add a Product</h5>
+                    </div>
+                    <div class="modal-body">
+                        <div class="">
+                            <form class="container mt-5" style="background: aliceblue;height: 313px;" id="add_product_form" enctype="multipart/form-data">
+                                <div class="form-row">
+                                  <div class="form-group col-md-6">
+                                    <label for="product_name">Product Name</label>
+                                    <input type="text" class="form-control" id="product_name" placeholder="Product Name">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="price">Price</label>
+                                    <input type="number" class="form-control" id="price" placeholder="Price">
+                                  </div>
+                                </div>
+                                <div class="form-group">
+                                  <label for="description">Description</label>
+                                  <input type="text" class="form-control" id="description" placeholder="Description">
+                                </div>
+                                <div class="form-row">
+                                  <div class="form-group col-md-6">
+                                    <label for="discount">Discount</label>
+                                    <input type="text" class="form-control" id="discount" placeholder="Discount">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                    <label for="product_photo">Product Photo</label>
+                                    <input type="file" class="form-control" id="product_photo">
+                                  </div>
+                                </div>
+                                <button type="button" onclick="product_add_fn()" class="btn btn-primary">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+    </body>
+    
+    {% include 'base_scripts.html' %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/dt-1.11.3/datatables.min.js"></script>
+    <script>
+        var user_id = ""
+        var product_add = ""
+        var update_name = ""
+        $("#customer_table").DataTable({
+            "bLengthChange": false,
+            "serverSide":true,
+            "processing":true,
+            "pageLength":5,
+            "searching":false,
+            "lengthChange": false,
+            "scrollX": true,
+            ajax: {
+            url:  `/ecom/customer_tb_details/?type=table`,
+            headers: {
+                "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val(),
+            },
+            data: function (data) {
+                
+                delete data.columns;
+            },
+     
+            },
+            bDestroy: true,
+            // Column Starts
+            columns: [
+            {
+                data: null,
+                "sortable": false,
+                render: function(data, type, row, meta) {
+                    return meta.row + meta.settings._iDisplayStart + 1;
+                }
+            },
+            //{ data: "channel.name", "sortable": true },
+            {
+                "data": "customer_name",
+                className: "center",
+                "sortable": true,
+            },
+     
+            { data: "customers_address" ,"sortable": true},
+            { data: "mobile_number" ,"sortable": true},
+            {
+                data: null,
+                className: "center displayblock",
+                render: function(data, type, row, meta) {
+                    data =
+                    '<div>' +
+                    '<button class="btn btn-primary btn-sm cursor-pointer px-1 text_master customer_edit" data-edit="' + row.id + '" onclick="edit_customer(' + row.id + ')">Edit</button>' +
+                    '<button class="btn btn-danger btn-sm cursor-pointer px-1 text_master ms-2 customer_delete" data-delete="' + row.id + '" onclick="delete_customer(' + row.id + ')">Delete</button>' +
+                    '</div>';
+                
+                    return data;
+                },
+                
+            },
+            {
+                data: null,
+                className: "center displayblock",
+                render: function(data, type, row, meta) {
+                    data =
+                    '<div>' +
+                    '<button class="btn btn-primary btn-sm cursor-pointer px-1 text_master customer_edit" data-add_product="' + row.id + '" onclick="add_product(' + row.id + ')">Add</button>' 
+                    '</div>';
+                    return data;
+                },
+                
+            },
+            ],
+            "drawCallback": function (settings) { 
+            // Here the response
+            var response = settings.json;
+            console.log(response);
+        },
+     
+     
+            responsive: true,
+            language: {
+            searchPlaceholder: "Search...",
+            sSearch: "",
+            lengthMenu: "_MENU_ items/page",
+            },
+     
+            order: [[2, "desc"]]
+        });
+        $(document).on('click','.edit_btn',function(e){
+            update_name =  e.currentTarget.getAttribute('data-name');
+           $('#Unarchived_modal').modal('show');
+        })
+        $('.status_change_yes').on('click',function(){
+            let is_active;
+           $('#gridCheck').is(':checked')?is_active = true:is_active = false
+           $.ajax({
+            url: "/ecom/update_status",
+            type: "POST",
+            headers: {
+              "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()
+            },
+            data: JSON.stringify({
+                is_active: is_active,
+                products_name:update_name
+                //image_data:image_data
+            }),
+            contentType: "application/json",
+            success: function(data) {
+              if (data.status === 200) {
+                alert("Success!");
+                url=  '/ecom/product_details_tb/?type=table',
+                table = $("#product_table").DataTable();
+                table.ajax.url(url).load();
+                $('#Unarchived_modal').modal('hide');
+              }
+            },
+            error: function(jqXHR, exception) {
+              console.log(exception);
+            }
+          });
+        });
+
+        $('.close_model').on('click', function(){
+            $('#Unarchived_modal').modal('hide');
+        })
+      function edit_customer(id){
+        user_id = id;
+        $.ajax({
+            url: "/ecom/edit_customer",
+            type: "POST",
+            headers: {
+              "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()
+            },
+            data: JSON.stringify({
+                id: id,
+            }),
+            contentType: "application/json",
+            success: function(data) {
+               if(data.status==200){
+                $('#name_edit').val(data.data.customer_name);
+                $('#address_edit').val(data.data.customers_address);
+                $('#mobilenumber_edit').val(data.data.mobile_number);
+                $('#user_edit_modal').modal('show');
+            }
+            },
+            error: function(jqXHR, exception) {
+              console.log(exception);
+            }
+          });
+        }
+        function delete_customer(id){
+            $.ajax({
+                url: "/ecom/delete_customer",
+                type: "POST",
+                headers: {
+                  "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()
+                },
+                data: JSON.stringify({
+                    id: id,
+                }),
+                contentType: "application/json",
+                success: function(data) {
+                    alert(data.msg);
+                    url=  '/ecom/customer_tb_details/?type=table',
+                    table = $("#customer_table").DataTable();
+                    table.ajax.url(url).load();
+                   // $('#Unarchived_modal').modal('hide');
+     
+                },
+                error: function(jqXHR, exception) {
+                  console.log(exception);
+                }
+              });
+        } 
+        function update_user(){
+            $('#user_edit_modal').modal('hide');
+           $.ajax({
+            url: "/ecom/update_customer",
+            type: "POST",
+            headers: {
+              "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()
+            },
+            data: JSON.stringify({
+                customer_name :  $('#name_edit').val(),
+                customers_address :  $('#address_edit').val(),
+                mobile_number : $('#mobilenumber_edit').val(),
+                id : user_id
+            }),
+            contentType: "application/json",
+            success: function(data) {
+                alert(data.msg);
+                url=  '/ecom/customer_tb_details/?type=table',
+                table = $("#customer_table").DataTable();
+                table.ajax.url(url).load();
+ 
+            },
+            error: function(jqXHR, exception) {
+              console.log(exception);
+            }
+          });
+    }
+    function add_product(id){
+        product_add = id;
+        $("#add_product").modal('show');
+    }
+
+    function product_add_fn(){
+        var file = document.querySelector('#product_photo').files[0];
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function() {
+        save_details(reader.result,product_add);
+        console.log(reader.result);
+        };
+        reader.onerror = function(error) {
+            console.log('Error: ', error);
+        };
+    }
+    function save_details(img,id){
+        
+        const products_name = $('#product_name').val();
+        const price = $('#price').val();
+        const description = $('#description').val();
+        const discount = $('#discount').val();
+        const image_data = img;
+      $.ajax({
+        url: "/ecom/add_product_details",
+        type: "POST",
+        headers: {
+          "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()
+        },
+        data: JSON.stringify({
+            products_name:products_name,
+            price:price,
+            description:description,
+            discount:discount,
+            image_data:image_data,
+            id:id
+        }),
+        contentType: "application/json",
+        success: function(data) {
+          if (data.status === 200) {
+            alert(data.msg);
+            var url = "/ecom/dashboard";
+            $(location).attr("href", url);
+          }
+          else {
+            alert(data.msg);
+          }
+        },
+        error: function(jqXHR, exception) {
+          console.log(exception);
+        }
+      });
+    }
+    
+    </script>
+</html>

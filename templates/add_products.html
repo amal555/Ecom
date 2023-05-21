@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+        {% include 'base_style.html' %}
+    </head>
+    <body style="background-image: url('{% static "images/bg-01.jpg" %}');">
+        {% csrf_token %}
+        {% include 'nav.html' %}
+        <form class="container mt-5" style="background: aliceblue;height: 313px;" id="add_product_form" enctype="multipart/form-data">
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="product_name">Product Name</label>
+                <input type="text" class="form-control" id="product_name" placeholder="Product Name">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="price">Price</label>
+                <input type="number" class="form-control" id="price" placeholder="Price">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <input type="text" class="form-control" id="description" placeholder="Description">
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="discount">Discount</label>
+                <input type="text" class="form-control" id="discount" placeholder="Discount">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="product_photo">Product Photo</label>
+                <input type="file" class="form-control" id="product_photo">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </form>
+    </body>
+    {% include 'base_scripts.html' %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+            var photo_prd = ""
+           
+
+        $('#add_product_form').on('submit', function(event) {
+            event.preventDefault();
+            var file = document.querySelector('#product_photo').files[0];
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function() {
+            save_details(reader.result);
+            console.log(reader.result);
+            };
+            reader.onerror = function(error) {
+                console.log('Error: ', error);
+            };
+          
+        });
+        function save_details(img){
+            const products_name = $('#product_name').val();
+            const price = $('#price').val();
+            const description = $('#description').val();
+            const discount = $('#discount').val();
+            const image_data = img;
+          $.ajax({
+            url: "/ecom/add_product_details",
+            type: "POST",
+            headers: {
+              "X-CSRFToken": $("input[name=csrfmiddlewaretoken]").val()
+            },
+            data: JSON.stringify({
+                products_name:products_name,
+                price:price,
+                description:description,
+                discount:discount,
+                image_data:image_data
+            }),
+            contentType: "application/json",
+            success: function(data) {
+              if (data.status === 200) {
+                alert(data.msg);
+              }
+              else {
+                alert(data.msg);
+              }
+            },
+            error: function(jqXHR, exception) {
+              console.log(exception);
+            }
+          });
+        }
+    </script>
+</html>
