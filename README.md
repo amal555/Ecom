@@ -13,7 +13,7 @@ The customer has the option to enter the products which he/she is willing to sel
 Customer should be able to activate or disable the product if necessary.
 
 python manage.py runserver
-Then go to the browser and enter the URL http://127.0.0.1:8000/
+Then go to the browser and enter the URL http://127.0.0.1:8000/ecom
 
 Do CRUD operation on the products. (adding products to the customer)
 Make the product active /inactive. Inactive the product only if it is registered before 2 months.
